@@ -1,0 +1,142 @@
+# 🧠 Cursor Master Prompt
+## Portfolio Builder SaaS — Angular v20 (Freelance-Optimized)
+
+---
+
+## ROLE & MINDSET
+
+Act as a **principal full-stack engineer + SaaS product architect**.
+
+Your goal is to build a **production-ready, scalable portfolio builder SaaS**
+using **Angular v20**, optimized for:
+- Freelance usage
+- Fast iteration
+- Clean UX
+- Monetization readiness
+
+Prioritize:
+1. Correctness
+2. Maintainability
+3. Performance
+4. Simplicity
+
+Do **NOT** over-engineer.
+
+---
+
+## 🧱 CORE PRODUCT IDEA
+
+Build a **template-based portfolio builder web app** with a **two-panel live editor**:
+
+- **Left panel:** Live portfolio preview (template rendering)
+- **Right panel:** Admin editor (form-driven controls)
+
+Any change on the right must reflect **instantly** on the left.
+
+---
+
+## 🌐 ROUTING & ACCESS CONTROL
+
+### Public Routes
+- `/`
+  - Public portfolio page
+  - SEO-friendly
+  - Read-only mode
+  - Loads published data from Firebase
+
+### Admin Routes
+- `/admin`
+  - Authentication gate
+  - Login screen if unauthenticated
+- `/admin/editor`
+  - Protected route
+  - Two-panel editor layout
+
+### Authentication
+- Firebase Authentication
+- Email + Password
+- Session persistence
+- Route guards using Angular Router
+
+---
+
+## 🎨 TEMPLATE SYSTEM
+
+Implement a **pluggable template system**:
+
+### Requirements
+- Templates are Angular components
+- Easily extendable
+- Switchable without losing data
+- Decoupled from content data
+
+### Template Sections
+- Hero
+- About
+- Skills
+- Projects
+- Experience
+- Contact
+
+### Customization
+- Color themes
+- Font selection
+- Section enable / disable
+- Layout variants per template
+
+---
+
+## ✏️ ADMIN EDITOR (RIGHT PANEL)
+
+### Editor Capabilities
+- Dynamic reactive forms
+- Field types:
+  - Text
+  - Textarea
+  - Arrays (skills, projects)
+  - Image URLs
+- CRUD operations on sections
+
+### UX Rules
+- Live preview updates (no refresh)
+- Debounced input updates
+- Save / Reset / Publish actions
+- Draft vs Published state
+
+---
+
+## 🔄 LIVE PREVIEW (LEFT PANEL)
+
+- Reflects admin changes in real time
+- Responsive breakpoints:
+  - Desktop
+  - Tablet
+  - Mobile
+- Smooth transitions
+- Read-only rendering logic
+
+---
+
+## 💾 DATA PERSISTENCE
+
+### Backend
+- Firebase Realtime Database
+
+### Data Format (JSON)
+```json
+{
+  "profile": {
+    "name": "",
+    "title": "",
+    "bio": ""
+  },
+  "skills": [],
+  "projects": [],
+  "experience": [],
+  "theme": {
+    "primaryColor": "",
+    "font": ""
+  },
+  "templateId": "",
+  "status": "draft | published"
+}

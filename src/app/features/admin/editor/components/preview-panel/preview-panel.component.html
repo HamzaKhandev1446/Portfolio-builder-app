@@ -1,0 +1,17 @@
+<div class="preview-panel">
+  <div class="preview-header">
+    <h2>Preview</h2>
+    <div class="viewport-controls">
+      <button class="viewport-btn active">Desktop</button>
+      <button class="viewport-btn">Tablet</button>
+      <button class="viewport-btn">Mobile</button>
+    </div>
+  </div>
+  
+  <div class="preview-content" #templateContainer>
+    <!-- Template component will be dynamically loaded here -->
+    <div *ngIf="!portfolio" class="empty-state">
+      <p>No portfolio data available</p>
+    </div>
+  </div>
+</div>
