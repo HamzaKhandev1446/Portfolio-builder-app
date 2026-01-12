@@ -6,7 +6,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
 @Component({
@@ -24,7 +24,8 @@ export class LoginComponent {
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -34,7 +35,12 @@ export class LoginComponent {
     // Redirect if already authenticated
     this.authService.user$.subscribe(user => {
       if (user) {
-        this.router.navigate(['/admin/editor']);
+        const domainPath = this.route.snapshot.parent?.params['domainPath'];
+        if (domainPath) {
+          this.router.navigate([domainPath, 'admin', 'editor']);
+        } else {
+          this.router.navigate(['/admin/editor']);
+        }
       }
     });
   }
@@ -47,7 +53,12 @@ export class LoginComponent {
 
       this.authService.signIn(email, password).subscribe({
         next: () => {
-          this.router.navigate(['/admin/editor']);
+          const domainPath = this.route.snapshot.parent?.params['domainPath'];
+          if (domainPath) {
+            this.router.navigate([domainPath, 'admin', 'editor']);
+          } else {
+            this.router.navigate(['/admin/editor']);
+          }
         },
         error: (err) => {
           this.error = err.message;

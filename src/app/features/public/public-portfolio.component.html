@@ -1,7 +1,30 @@
 <div class="public-portfolio">
-  <div class="container">
-    <h1>Public Portfolio View</h1>
-    <p>This will display the published portfolio.</p>
-    <!-- Template will be dynamically loaded here -->
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="loading-spinner"></div>
+    <p>Loading portfolio...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !loading" class="error-state">
+    <div class="container">
+      <h1>Portfolio Not Found</h1>
+      <p>{{ error }}</p>
+      <p><small>Make sure the portfolio is published and the URL is correct.</small></p>
+    </div>
+  </div>
+
+  <!-- Template Container - Portfolio will be rendered here -->
+  <div *ngIf="!loading && !error" #templateContainer class="template-container" style="width: 100%; min-height: 100vh; position: relative; margin: 0; padding: 0; top: 0; left: 0;">
+    <!-- Template component will be dynamically loaded here -->
+    <div *ngIf="!portfolio && !loading && !error" class="debug-info" style="padding: 20px; background: #fff3cd; margin: 20px; border: 2px solid #ffc107;">
+      <h3>⚠️ No Portfolio Data</h3>
+      <p>Portfolio is null. Check:</p>
+      <ul>
+        <li>Is username set in Settings?</li>
+        <li>Is portfolio published (not just draft)?</li>
+        <li>Check Firebase Console for data</li>
+      </ul>
+    </div>
   </div>
 </div>

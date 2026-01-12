@@ -15,5 +15,10 @@ export const ADMIN_ROUTES: Routes = [
     path: 'editor',
     loadComponent: () => import('./editor/editor.component').then(m => m.EditorComponent),
     canActivate: [AuthGuard]
+  },
+  {
+    path: 'settings',
+    loadComponent: () => import('./settings/settings.component').then(m => m.SettingsComponent),
+    canActivate: [AuthGuard]
   }
 ];

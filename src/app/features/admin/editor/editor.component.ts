@@ -5,6 +5,7 @@
 
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterLink } from '@angular/router';
 import { PortfolioService } from '../../../core/services/portfolio.service';
 import { Portfolio } from '../../../models/portfolio.model';
 import { Observable } from 'rxjs';
@@ -14,7 +15,7 @@ import { EditorPanelComponent } from './components/editor-panel/editor-panel.com
 @Component({
   selector: 'app-editor',
   standalone: true,
-  imports: [CommonModule, PreviewPanelComponent, EditorPanelComponent],
+  imports: [CommonModule, RouterLink, PreviewPanelComponent, EditorPanelComponent],
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss']
 })
@@ -39,9 +40,16 @@ export class EditorComponent implements OnInit {
   }
 
   onPublish(): void {
+    console.log('Publish button clicked');
     this.portfolioService.publish().subscribe({
-      next: () => console.log('Portfolio published'),
-      error: (err) => console.error('Error publishing:', err)
+      next: () => {
+        console.log('Portfolio published successfully');
+        alert('Portfolio published successfully! Your portfolio is now live.');
+      },
+      error: (err) => {
+        console.error('Error publishing portfolio:', err);
+        alert('Error publishing portfolio: ' + (err.message || err));
+      }
     });
   }
 

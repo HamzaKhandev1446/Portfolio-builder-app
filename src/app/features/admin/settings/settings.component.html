@@ -1,0 +1,91 @@
+<div class="settings-container">
+  <div class="settings-header">
+    <h1>Portfolio Settings</h1>
+    <p>Configure your portfolio URL and domain settings</p>
+  </div>
+
+  <form [formGroup]="settingsForm" (ngSubmit)="onSubmit()" class="settings-form">
+    <div class="form-section">
+      <h2>Portfolio URL</h2>
+      
+      <div class="form-group">
+        <label for="username">Username (Recommended for Local Testing) *</label>
+        <input 
+          type="text" 
+          id="username" 
+          formControlName="username"
+          placeholder="muhammadhamza"
+          [class.error]="settingsForm.get('username')?.invalid && settingsForm.get('username')?.touched"
+        />
+        <small class="help-text">
+          <strong>Your portfolio URL:</strong> <code style="background: #f0fdf4; padding: 4px 8px; border-radius: 4px;">{{ portfolioUrl || 'localhost:4200/u/your-username' }}</code>
+          <br>
+          <span style="color: #22c55e; font-size: 0.9em; font-weight: 500;">✅ Simple! No dots needed. Just use: <code>localhost:4200/u/muhammadhamza</code></span>
+        </small>
+        <div class="error-message" *ngIf="settingsForm.get('username')?.invalid && settingsForm.get('username')?.touched">
+          <span *ngIf="settingsForm.get('username')?.errors?.['required']">Username is required</span>
+          <span *ngIf="settingsForm.get('username')?.errors?.['pattern']">Only lowercase letters, numbers, and hyphens allowed</span>
+          <span *ngIf="settingsForm.get('username')?.errors?.['minlength']">Username must be at least 3 characters</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="customDomain">Custom Domain (Optional)</label>
+        <input 
+          type="text" 
+          id="customDomain" 
+          formControlName="customDomain"
+          placeholder="muhammadhamzaportfolio.com"
+        />
+        <small class="help-text">
+          Enter your custom domain (e.g., muhammadhamzaportfolio.com). 
+          <strong>Important:</strong> Configure your DNS to point to this service:
+          <ul style="margin-top: 8px; padding-left: 20px;">
+            <li>Add an A record pointing to: [YOUR_SERVER_IP]</li>
+            <li>Or add a CNAME record pointing to: [YOUR_SAAS_DOMAIN]</li>
+          </ul>
+          Once DNS is configured, your portfolio will be available at your custom domain.
+        </small>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button 
+        type="submit" 
+        class="btn-primary"
+        [disabled]="settingsForm.invalid || saving"
+      >
+        {{ saving ? 'Saving...' : 'Save Settings' }}
+      </button>
+      
+      <div class="success-message" *ngIf="saveSuccess">
+        ✓ Settings saved successfully!
+      </div>
+    </div>
+  </form>
+
+  <div class="info-section">
+    <h3>How it works</h3>
+    <ul>
+      <li><strong>Username:</strong> Creates a friendly URL like <code>/u/your-username</code></li>
+      <li><strong>User ID:</strong> Your portfolio is always available at <code>/portfolio/your-user-id</code></li>
+      <li><strong>Custom Domain:</strong> Your portfolio will be available at your custom domain (e.g., <code>muhammadhamzaportfolio.com</code>)</li>
+    </ul>
+    
+    <div style="margin-top: 20px; padding: 15px; background: #eff6ff; border-radius: 6px; border-left: 4px solid var(--primary-color);">
+      <h4 style="margin-top: 0;">Custom Domain Setup:</h4>
+      <ol style="margin: 10px 0; padding-left: 20px;">
+        <li>Enter your domain in the field above</li>
+        <li>Save settings</li>
+        <li>Configure DNS at your domain registrar:
+          <ul style="margin-top: 8px; padding-left: 20px;">
+            <li><strong>A Record:</strong> Point to [YOUR_SERVER_IP]</li>
+            <li><strong>OR CNAME:</strong> Point to [YOUR_SAAS_DOMAIN]</li>
+          </ul>
+        </li>
+        <li>Wait for DNS propagation (usually 5-60 minutes)</li>
+        <li>Your portfolio will automatically load when someone visits your domain!</li>
+      </ol>
+    </div>
+  </div>
+</div>

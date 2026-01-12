@@ -1,0 +1,237 @@
+.cv-import-container {
+  background: white;
+  border-radius: 12px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 30px;
+}
+
+.cv-import-header {
+  margin-bottom: 25px;
+
+  h3 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a202c;
+    margin-bottom: 8px;
+
+    svg {
+      color: var(--primary-color, #667eea);
+    }
+  }
+
+  .help-text {
+    color: #718096;
+    font-size: 0.95rem;
+    margin: 0;
+  }
+}
+
+.file-upload-area {
+  border: 2px dashed #cbd5e0;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  transition: all 0.3s ease;
+  background: #f7fafc;
+  position: relative;
+
+  &:hover {
+    border-color: var(--primary-color, #667eea);
+    background: #edf2f7;
+  }
+
+  &.dragover {
+    border-color: var(--primary-color, #667eea);
+    background: #e6fffa;
+  }
+
+  .file-input {
+    position: absolute;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    cursor: pointer;
+  }
+
+  .file-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+
+    svg {
+      color: var(--primary-color, #667eea);
+      opacity: 0.7;
+    }
+
+    .upload-text {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #2d3748;
+    }
+
+    .upload-hint {
+      font-size: 0.875rem;
+      color: #718096;
+    }
+  }
+}
+
+.preview-section {
+  margin-top: 25px;
+
+  h4 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 12px;
+  }
+
+  .preview-box {
+    background: #f7fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+
+    pre {
+      margin: 0;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      line-height: 1.6;
+      color: #4a5568;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  }
+}
+
+.error-message,
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-weight: 500;
+}
+
+.error-message {
+  background: #fed7d7;
+  color: #c53030;
+  border: 1px solid #feb2b2;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.success-message {
+  background: #c6f6d5;
+  color: #22543d;
+  border: 1px solid #9ae6b4;
+
+  svg {
+    flex-shrink: 0;
+  }
+}
+
+.action-buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 25px;
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+  }
+
+  .btn-primary {
+    background: var(--primary-color, #667eea);
+    color: white;
+    border-color: var(--primary-color, #667eea);
+
+    &:hover:not(:disabled) {
+      background: var(--secondary-color, #764ba2);
+      border-color: var(--secondary-color, #764ba2);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: #4a5568;
+    border-color: #cbd5e0;
+
+    &:hover {
+      background: #f7fafc;
+      border-color: #a0aec0;
+    }
+  }
+}
+
+.info-box {
+  margin-top: 30px;
+  padding: 20px;
+  background: #edf2f7;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary-color, #667eea);
+
+  h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin-bottom: 12px;
+  }
+
+  ul {
+    margin: 0 0 15px 20px;
+    padding: 0;
+    color: #4a5568;
+
+    li {
+      margin-bottom: 8px;
+      line-height: 1.6;
+    }
+  }
+
+  .note {
+    margin: 0;
+    padding: 12px;
+    background: white;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    color: #4a5568;
+    line-height: 1.6;
+
+    strong {
+      color: #2d3748;
+    }
+  }
+}

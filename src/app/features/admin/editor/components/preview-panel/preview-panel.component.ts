@@ -3,7 +3,7 @@
  * Left panel - Live portfolio preview
  */
 
-import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges, ComponentRef, ViewContainerRef, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, OnChanges, SimpleChanges, AfterViewInit, ComponentRef, ViewContainerRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Portfolio } from '../../../../../models/portfolio.model';
 import { TemplateService } from '../../../../../features/templates/template.service';
@@ -15,23 +15,31 @@ import { TemplateService } from '../../../../../features/templates/template.serv
   templateUrl: './preview-panel.component.html',
   styleUrls: ['./preview-panel.component.scss']
 })
-export class PreviewPanelComponent implements OnInit, OnChanges, OnDestroy {
+export class PreviewPanelComponent implements OnInit, AfterViewInit, OnChanges, OnDestroy {
   @Input() portfolio: Portfolio | null = null;
   @ViewChild('templateContainer', { read: ViewContainerRef }) templateContainer!: ViewContainerRef;
   
   private componentRef: ComponentRef<any> | null = null;
+  private viewInitialized = false;
 
   constructor(private templateService: TemplateService) {}
 
   ngOnInit(): void {
+    // Portfolio might be set before view is initialized
+  }
+
+  ngAfterViewInit(): void {
+    this.viewInitialized = true;
     if (this.portfolio) {
-      this.loadTemplate();
+      // Use setTimeout to ensure ViewContainerRef is ready
+      setTimeout(() => this.loadTemplate(), 0);
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['portfolio'] && this.portfolio) {
-      this.loadTemplate();
+    if (changes['portfolio'] && this.portfolio && this.viewInitialized) {
+      // Use setTimeout to ensure ViewContainerRef is ready
+      setTimeout(() => this.loadTemplate(), 0);
     }
   }
 

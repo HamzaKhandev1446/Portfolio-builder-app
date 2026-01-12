@@ -9,7 +9,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { Portfolio, createEmptyPortfolio } from '../../models/portfolio.model';
 import { FirebaseService } from './firebase.service';
 import { AuthService } from './auth.service';
-import { map, switchMap, take } from 'rxjs/operators';
+import { map, switchMap, take, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -82,25 +82,37 @@ export class PortfolioService {
    * Publish portfolio
    */
   publish(): Observable<void> {
+    console.log('PortfolioService.publish() called');
     const user = this.authService.currentUser;
     if (!user) {
+      console.error('No user authenticated');
       throw new Error('User must be authenticated to publish portfolio');
     }
 
+    console.log('Current user:', user.uid);
     const portfolio = {
       ...this.portfolioSubject.value,
       status: 'published' as const,
       lastUpdated: new Date().toISOString()
     };
 
+    console.log('Portfolio to publish:', portfolio);
+    console.log('Saving to published path...');
+
     // Save both draft and published versions
     return this.firebaseService.savePortfolio(user.uid, portfolio, false).pipe(
       switchMap(() => {
+        console.log('Published version saved, now saving draft...');
         // Also update draft
         return this.firebaseService.savePortfolio(user.uid, portfolio, true);
       }),
       map(() => {
+        console.log('Both versions saved successfully');
         this.portfolioSubject.next(portfolio);
+      }),
+      catchError(error => {
+        console.error('Error in publish pipeline:', error);
+        throw error;
       })
     );
   }

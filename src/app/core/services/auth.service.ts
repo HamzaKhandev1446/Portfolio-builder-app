@@ -3,7 +3,7 @@
  * Handles Firebase Authentication
  */
 
-import { Injectable } from '@angular/core';
+import { Injectable, Optional } from '@angular/core';
 import { 
   Auth, 
   signInWithEmailAndPassword, 
@@ -12,7 +12,7 @@ import {
   onAuthStateChanged,
   User as FirebaseUser
 } from '@angular/fire/auth';
-import { Observable, BehaviorSubject, from } from 'rxjs';
+import { Observable, BehaviorSubject, from, throwError } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { User } from '../../models/user.model';
 
@@ -24,17 +24,28 @@ export class AuthService {
   public user$ = this.userSubject.asObservable();
   private loadingSubject = new BehaviorSubject<boolean>(true);
   public loading$ = this.loadingSubject.asObservable();
+  private isAuthAvailable: boolean;
 
-  constructor(private auth: Auth) {
-    // Listen to auth state changes
-    onAuthStateChanged(this.auth, (firebaseUser: FirebaseUser | null) => {
+  constructor(@Optional() private auth: Auth | null) {
+    this.isAuthAvailable = !!this.auth;
+    
+    if (!this.isAuthAvailable || !this.auth) {
+      console.warn('Firebase Auth not available. Update environment.ts with Firebase credentials.');
       this.loadingSubject.next(false);
-      if (firebaseUser) {
-        this.userSubject.next(this.mapFirebaseUser(firebaseUser));
-      } else {
-        this.userSubject.next(null);
-      }
-    });
+      this.userSubject.next(null);
+    } else {
+      // Listen to auth state changes
+      // Use non-null assertion since we've checked above
+      const auth: Auth = this.auth;
+      onAuthStateChanged(auth, (firebaseUser: FirebaseUser | null) => {
+        this.loadingSubject.next(false);
+        if (firebaseUser) {
+          this.userSubject.next(this.mapFirebaseUser(firebaseUser));
+        } else {
+          this.userSubject.next(null);
+        }
+      });
+    }
   }
 
   /**
@@ -55,7 +66,12 @@ export class AuthService {
    * Sign in with email and password
    */
   signIn(email: string, password: string): Observable<User> {
-    return from(signInWithEmailAndPassword(this.auth, email, password)).pipe(
+    if (!this.isAuthAvailable || !this.auth) {
+      return throwError(() => new Error('Firebase Auth is not configured. Please update environment.ts with your Firebase credentials.'));
+    }
+
+    const auth: Auth = this.auth; // Type assertion for TypeScript
+    return from(signInWithEmailAndPassword(auth, email, password)).pipe(
       map(result => this.mapFirebaseUser(result.user)),
       catchError(error => {
         throw this.handleAuthError(error);
@@ -67,7 +83,12 @@ export class AuthService {
    * Sign up with email and password
    */
   signUp(email: string, password: string): Observable<User> {
-    return from(createUserWithEmailAndPassword(this.auth, email, password)).pipe(
+    if (!this.isAuthAvailable || !this.auth) {
+      return throwError(() => new Error('Firebase Auth is not configured. Please update environment.ts with your Firebase credentials.'));
+    }
+
+    const auth: Auth = this.auth; // Type assertion for TypeScript
+    return from(createUserWithEmailAndPassword(auth, email, password)).pipe(
       map(result => this.mapFirebaseUser(result.user)),
       catchError(error => {
         throw this.handleAuthError(error);
@@ -79,7 +100,12 @@ export class AuthService {
    * Sign out
    */
   signOut(): Observable<void> {
-    return from(signOut(this.auth)).pipe(
+    if (!this.isAuthAvailable || !this.auth) {
+      return throwError(() => new Error('Firebase Auth is not configured.'));
+    }
+
+    const auth: Auth = this.auth; // Type assertion for TypeScript
+    return from(signOut(auth)).pipe(
       catchError(error => {
         throw this.handleAuthError(error);
       })

@@ -8,11 +8,12 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, FormArray } from '@angular/forms';
 import { Portfolio } from '../../../../../models/portfolio.model';
 import { debounceTime } from 'rxjs/operators';
+import { CvImportComponent } from '../cv-import/cv-import.component';
 
 @Component({
   selector: 'app-editor-panel',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, CvImportComponent],
   templateUrl: './editor-panel.component.html',
   styleUrls: ['./editor-panel.component.scss']
 })
@@ -151,6 +152,64 @@ export class EditorPanelComponent implements OnInit, OnChanges {
 
   removeExperience(index: number): void {
     this.experienceFormArray.removeAt(index);
+  }
+
+  onCvImported(importedData: Partial<Portfolio>): void {
+    // Merge imported data with current portfolio
+    // Update profile
+    if (importedData.profile) {
+      this.editorForm.patchValue({
+        profile: {
+          ...this.editorForm.value.profile,
+          ...importedData.profile
+        }
+      });
+    }
+
+    // Update skills
+    if (importedData.skills && importedData.skills.length > 0) {
+      const skillsArray = this.editorForm.get('skills') as FormArray;
+      skillsArray.clear();
+      importedData.skills.forEach(skill => {
+        skillsArray.push(this.fb.group({
+          name: [skill.name || ''],
+          level: [skill.level || 75]
+        }));
+      });
+    }
+
+    // Update experience
+    if (importedData.experience && importedData.experience.length > 0) {
+      const expArray = this.editorForm.get('experience') as FormArray;
+      expArray.clear();
+      importedData.experience.forEach(exp => {
+        expArray.push(this.fb.group({
+          position: [exp.position || ''],
+          company: [exp.company || ''],
+          startDate: [exp.startDate || ''],
+          endDate: [exp.endDate || ''],
+          description: [exp.description || '']
+        }));
+      });
+    }
+
+    // Update projects
+    if (importedData.projects && importedData.projects.length > 0) {
+      const projArray = this.editorForm.get('projects') as FormArray;
+      projArray.clear();
+      importedData.projects.forEach(project => {
+        projArray.push(this.fb.group({
+          title: [project.title || ''],
+          description: [project.description || ''],
+          imageUrl: [project.imageUrl || ''],
+          liveUrl: [project.liveUrl || ''],
+          codeUrl: [project.codeUrl || '']
+        }));
+      });
+    }
+
+    // Trigger update
+    this.emitUpdate();
   }
 
   private generateId(): string {

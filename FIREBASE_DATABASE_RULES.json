@@ -1,0 +1,38 @@
+{
+  "rules": {
+    "portfolios": {
+      "$userId": {
+        ".read": "$userId === auth.uid || data.child('published').exists()",
+        ".write": "$userId === auth.uid",
+        "draft": {
+          ".read": "$userId === auth.uid",
+          ".write": "$userId === auth.uid"
+        },
+        "published": {
+          ".read": true,
+          ".write": "$userId === auth.uid"
+        }
+      }
+    },
+    "tenants": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    },
+    "usernames": {
+      ".read": true,
+      "$username": {
+        ".read": true,
+        ".write": "auth != null && (!data.exists() || data.val() === auth.uid)"
+      }
+    },
+    "domains": {
+      ".read": true,
+      "$encodedDomain": {
+        ".read": true,
+        ".write": "auth != null"
+      }
+    }
+  }
+}

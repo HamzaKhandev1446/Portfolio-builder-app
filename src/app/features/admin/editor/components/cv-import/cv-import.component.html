@@ -1,0 +1,87 @@
+<div class="cv-import-container">
+  <div class="cv-import-header">
+    <h3>
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="17 8 12 3 7 8"></polyline>
+        <line x1="12" y1="3" x2="12" y2="15"></line>
+      </svg>
+      Import from CV/Resume
+    </h3>
+    <p class="help-text">Upload your CV as a text file (.txt) to automatically fill in your portfolio data.</p>
+  </div>
+
+  <div class="cv-import-content">
+    <div class="file-upload-area" [class.dragover]="false">
+      <input 
+        type="file" 
+        id="cv-file-input" 
+        accept=".txt,.text"
+        (change)="onFileSelected($event)"
+        class="file-input"
+      />
+      <label for="cv-file-input" class="file-label">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        <span class="upload-text">
+          {{ selectedFile ? selectedFile.name : 'Click to upload or drag and drop' }}
+        </span>
+        <span class="upload-hint">Text file (.txt) only</span>
+      </label>
+    </div>
+
+    <div *ngIf="previewText" class="preview-section">
+      <h4>Preview</h4>
+      <div class="preview-box">
+        <pre>{{ previewText.substring(0, 500) }}{{ previewText.length > 500 ? '...' : '' }}</pre>
+      </div>
+    </div>
+
+    <div *ngIf="error" class="error-message">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      {{ error }}
+    </div>
+
+    <div *ngIf="success" class="success-message">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+      CV imported successfully! Review and adjust the data below.
+    </div>
+
+    <div class="action-buttons" *ngIf="previewText && !success">
+      <button class="btn btn-primary" (click)="onImport()" [disabled]="isImporting">
+        <svg *ngIf="!isImporting" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span *ngIf="isImporting">Importing...</span>
+        <span *ngIf="!isImporting">Import CV Data</span>
+      </button>
+      <button class="btn btn-outline" (click)="onCancel()">
+        Cancel
+      </button>
+    </div>
+  </div>
+
+  <div class="info-box">
+    <h4>Tips for best results:</h4>
+    <ul>
+      <li>Include your name, email, and phone number</li>
+      <li>List your skills clearly (comma-separated or line-separated)</li>
+      <li>Include work experience with company names and dates</li>
+      <li>Add a brief summary or bio section</li>
+      <li>Include links to LinkedIn, GitHub, or your website</li>
+    </ul>
+    <p class="note">
+      <strong>Note:</strong> Currently supports text files (.txt) only. 
+      Convert your PDF CV to text first, or copy-paste your CV content into a .txt file.
+    </p>
+  </div>
+</div>
